@@ -7,45 +7,28 @@ import { createDronePath } from "../utils/path";
 
 const path = createDronePath();
 
-const Drone = forwardRef<Group>((props, ref) => {
+const Drone = forwardRef<Group>((_props, ref) => {
   const gltf = useGLTF("/models/Drone.glb") as any;
-
   const { isPlaying, progress, setProgress, setPlaying } = useDroneControls();
 
   useFrame((_, delta) => {
-    if (!ref || !(ref as any).current) {
-      console.log("❌ Drone ref is NULL");
-      return;
-    }
+    if (!ref || !(ref as any).current) return;
 
     const drone = (ref as any).current as Group;
 
-    // DEBUG: log playing & progress
-    console.log("isPlaying:", isPlaying, "progress:", progress);
-
-    // --- IF PLAYING, UPDATE PROGRESS ---
     if (isPlaying) {
-      const next = progress + delta * 0.1; // speed
-      console.log("nextProgress:", next);
-
+      const next = progress + delta * 0.1;
       if (next >= 1) {
-        console.log("⛔ Reached end — stopping");
         setPlaying(false);
       } else {
         setProgress(next);
       }
     }
 
-    // --- MOVE DRONE ---
     const pos = new Vector3();
     path.getPointAt(progress, pos);
-
-    // DEBUG: print position
-    console.log("Drone position:", pos);
-
     drone.position.copy(pos);
 
-    // --- ORIENT DRONE ---
     const tangent = path.getTangentAt(progress);
     drone.lookAt(pos.clone().add(tangent));
   });
@@ -59,6 +42,7 @@ const Drone = forwardRef<Group>((props, ref) => {
     />
   );
 });
+
 
 useGLTF.preload("/models/Drone.glb");
 

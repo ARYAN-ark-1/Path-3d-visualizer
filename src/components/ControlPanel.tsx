@@ -3,7 +3,8 @@ import React from "react";
 import { useDroneControls } from "../store/useDroneControls";
 
 const ControlPanel: React.FC = () => {
-  const { isPlaying, setPlaying, reset } = useDroneControls();
+  const { isPlaying: _isPlaying, setPlaying, reset } = useDroneControls();
+
 
   return (
     <div className="w-64 h-full bg-gray-900 text-white p-6 flex flex-col gap-4 shadow-xl">
